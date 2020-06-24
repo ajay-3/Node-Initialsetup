@@ -1,0 +1,27 @@
+{
+    "db": {
+      "project_name": "",
+      "name": "",
+      "password": ""
+    },
+    "api": {
+      "version": "v1",
+      "port": 4000,
+      "environment": "local"
+    },
+    "cors": {
+      "whitelist": ["https://localhost:4200"],
+      "allowLocal": true
+    },
+    "rateLimit": {
+      "minutes": 10,
+      "maxRequests": 100000000
+    },
+    "jwt": {
+      "secret": "",
+      "expiresIn": "30d"
+    },
+    "logEnabled": true,
+    "logLevel": "info",
+    "resetPasswordTokenExpiry": 86400
+}
