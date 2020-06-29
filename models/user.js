@@ -1,5 +1,23 @@
 const mongoose =require('mongoose');
 
+/**
+ * @swagger
+ * definations:
+ *  user:
+ *    type:object
+ *     properties:
+ *       id:
+ *         type:string
+ *       fname:
+ *         type:string
+ *       lname:
+ *         type:string
+ *       userName:
+ *         type:string
+ *       password:
+ *          type:string
+ *     
+ */
 const schema = new mongoose.Schema({
     fname:{
         type:String,

@@ -1,8 +1,9 @@
 {
     "db": {
-      "project_name": "",
-      "name": "",
-      "password": ""
+      "name": "Assignment",
+      "host": "localhost",
+      "port": 27017
+
     },
     "api": {
       "version": "v1",
@@ -20,6 +21,10 @@
     "jwt": {
       "secret": "",
       "expiresIn": "30d"
+    },
+    "twilio": {
+     "accountSid": "",
+     "authToken":""
     },
     "logEnabled": true,
     "logLevel": "info",

@@ -1,0 +1,70 @@
+{  
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Microbi Tech",
+        "description": "This is for a demo"
+    },
+    "host":"localhost:4000",
+    "tags": [
+        {
+            "name": "Demo",
+            "description": "API for dhathu in the system"
+        }
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/random-data": {
+            "get": {
+                "tags": [
+                    "Random-data"
+                ],
+                "summary": "Get all random-data in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definations/user"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Random-data"
+                ],
+                "summary": "Create a some random data in system",
+                "requestBody": {
+                    "description": "user Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/user"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        }
+    }
+}

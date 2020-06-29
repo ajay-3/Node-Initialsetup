@@ -13,6 +13,21 @@ const authenticator = require('./controllers/auth');
 const logger = require('./lib/utils/logger');
 const db = require('./lib/utils/db');
 
+//const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggaerDocument = require('./lib/utils/swagger.json');
+
+// const options = {
+//   swaggaerDocument,
+//   apis:['./routes/v1/*.js']
+// }
+
+//const swaggerSpec = swaggerJSDoc(options);
+
+app.get('/swagger.json', function(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
@@ -57,11 +72,14 @@ const limiter = rateLimit({
       data: {},
     },
   });
-  app.use(limiter);
+app.use(limiter);
 
 /* Recursively include all routes inside ./routes */
-function loadRoutes() {
+function loadRoutes() {  
+    app.use('/swagger',swaggerUi.serve,swaggerUi.setup(swaggaerDocument),()=>{
+    });
     glob.sync('./routes/**/*.js').forEach(function (file) {
+      console.log(path.resolve(file))
       app.use('/' + config.get('api.version') + '/', require(path.resolve(file)));
     });
     handle404Error();
@@ -73,7 +91,7 @@ glob.sync('./models/**/*.js').forEach(function (file) {
 });
 }
 
-app.use(authenticator._fakeAuth); // use _fakeAuth when testing
+//app.use(authenticator._fakeAuth); // use _fakeAuth when testing
 
 /* Default response for 404 errors */
 function handle404Error() {
@@ -86,7 +104,8 @@ function handle404Error() {
   }
   /* Start API server on the specified port */
   function startServer() {
-    http.listen(config.get('api.port'));
+    http.listen(config.get('api.port'),()=>{
+    });
     logger.info({ description: `server started on ${config.get('api.port')}` });
   }
   
@@ -94,7 +113,7 @@ function handle404Error() {
     if (app.isAppInitialized) {
       return;
     }
-  //  await db.connection();
+    await db.connection();
     logger.info({ description: 'Connected to database.' });
   
     await loadModels();

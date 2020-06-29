@@ -6,6 +6,9 @@ const config = require('config');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const crypto = require('crypto');
+const otpLogin = require('../models/login');
+const sendMsg =require('../lib/utils/twilio');
+
 
 async function verifyResetPasswordToken({ user, token }) {
   const now = moment();
@@ -86,10 +89,10 @@ async function _generateResetPasswordLink(req, res) {
     });
   }
 }
-
+//refresh token
 async function getToken(user) {
   const token = jwt.sign(user, config.get('jwt.secret'), {
-    expiresIn: config.get('jwt.expiresIn'),
+    expiresIn: config.get('jwt.expiresIn')
   });
 
   return token;
@@ -270,7 +273,78 @@ async function _fakeAuth(req, res, next) {
   next();
 }
 
+async function generateOTP(){
+  var digits = '0123456789'; 
+    let OTP = ''; 
+    for (let i = 0; i < 4; i++ ) { 
+        OTP += digits[Math.floor(Math.random() * 10)]; 
+    } 
+  return OTP; 
+}
+
+async function expireOtp(phoneNumber){
+  setTimeout( async ()=>{ await otpLogin.updateOne({
+    "phoneNumber":phoneNumber
+ },{$set:{"expired":true}})},8000)
+}
+
+async function _loginWithOtp(req,res,next){
+  try{ 
+  let otp = await generateOTP();
+  const phoneNumber = req.body.phoneNumber;
+  if(!phoneNumber){
+    res.json({
+      status:false,
+      message:"Phone Number is required"
+    })
+  }
+  let user  = await otpLogin.find({'phoneNumber':phoneNumber});
+  if(user){
+    await otpLogin.updateOne({
+      "phoneNumber":phoneNumber
+   },{
+     $set:{"otp":otp,"expired":false}});
+  }else{  
+  const details = new otpLogin({
+    phoneNumber:phoneNumber,
+    otp:otp
+   });
+  details.save();
+  }
+  //send the otp here
+  sendMsg(`+91${phoneNumber}`,otp);
+  //expiring OTP after 180 sec
+  expireOtp(phoneNumber);
+  res.json({status:"true",message:"A 4-Digit Otp has been sent to your Contact Number"});
+  }catch(err){
+    res.json({
+      status:false,
+      message:err
+    })
+  }
+}
+
+async function _validateOtp(req,res,next){
+  console.log(req.body);
+  const {phoneNumber,otp} = req.body;
+  const details = await otpLogin.find({phoneNumber:phoneNumber});
+  if(details.expired == true){
+    res.json({
+      status:false,
+      message:"Otp has been expired try new one"
+    });
+  }
+  if(details.otp == otp){
+    res.json({
+      status:true,
+      message:"You are logged in successfully"
+    });
+  }
+}
+
 module.exports = {
+  _loginWithOtp,
+  _validateOtp,
   _changePassword,
   _generateResetPasswordLink,
   _loginByEmailAndPassword,

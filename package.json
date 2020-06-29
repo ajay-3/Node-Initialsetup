@@ -1,5 +1,5 @@
 {
-  "name": "gogame",
+  "name": "IntialSetup",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -23,6 +23,8 @@
     "mongoose": "^5.9.19",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.4",
-    "pino": "^6.3.2"
+    "pino": "^6.3.2",
+    "swagger-ui-express": "^4.1.4",
+    "twilio": "^3.47.0"
   }
 }
