@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const crypto = require('crypto');
 const otpLogin = require('../models/login');
-const sendMsg =require('../lib/utils/twilio');
 
 
 async function verifyResetPasswordToken({ user, token }) {
@@ -312,7 +311,6 @@ async function _loginWithOtp(req,res,next){
   details.save();
   }
   //send the otp here
-  sendMsg(`+91${phoneNumber}`,otp);
   //expiring OTP after 180 sec
   expireOtp(phoneNumber);
   res.json({status:"true",message:"A 4-Digit Otp has been sent to your Contact Number"});

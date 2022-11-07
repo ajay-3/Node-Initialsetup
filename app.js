@@ -113,11 +113,11 @@ function handle404Error() {
     if (app.isAppInitialized) {
       return;
     }
-    await db.connection();
-    logger.info({ description: 'Connected to database.' });
+    // await db.connection();
+    // logger.info({ description: 'Connected to database.' });
   
-    await loadModels();
-    logger.info({ description: 'All models loaded' });
+    // await loadModels();
+    // logger.info({ description: 'All models loaded' });
   
     await loadRoutes();
     logger.info({ description: 'All routes loaded' });

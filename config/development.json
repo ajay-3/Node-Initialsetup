@@ -22,10 +22,6 @@
       "secret": "",
       "expiresIn": "30d"
     },
-    "twilio": {
-     "accountSid": "",
-     "authToken":""
-    },
     "logEnabled": true,
     "logLevel": "info",
     "resetPasswordTokenExpiry": 86400
